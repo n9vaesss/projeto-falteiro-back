@@ -1,11 +1,25 @@
 package com.projectfalteiro.falteiro.entities;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+import org.mindrot.jbcrypt.BCrypt;
+
 import java.util.UUID;
 
+@Entity
+@Table(name= "tb_user")
 public class User {
 
+    @Id
+    @Getter
     private String id;
+    @Getter
     private String name;
+    @Getter
     private String email;
     private String password;
 
@@ -17,38 +31,15 @@ public class User {
         this.id = UUID.randomUUID().toString();
         this.name = name;
         this.email = email;
-        this.password = password;
+        this.password = hashPassword(password);
     }
 
-    public String getId() {
-        return id;
+    public boolean checkPassword(String plainTextPassword) {
+        return BCrypt.checkpw(plainTextPassword, this.password);
     }
 
-    public String getName() {
-        return name;
+    private String hashPassword(String plainTextPassword) {
+        return BCrypt.hashpw(plainTextPassword, BCrypt.gensalt());
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }
