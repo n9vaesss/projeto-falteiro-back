@@ -17,9 +17,9 @@ public class User {
     @Id
     @Getter
     private String id;
-    @Getter
+    @Getter @Setter
     private String name;
-    @Getter
+    @Getter @Setter
     private String email;
     private String password;
 
@@ -27,7 +27,7 @@ public class User {
 
     }
 
-        public User(String name, String email, String password) {
+    public User(String name, String email, String password) {
         this.id = UUID.randomUUID().toString();
         this.name = name;
         this.email = email;
