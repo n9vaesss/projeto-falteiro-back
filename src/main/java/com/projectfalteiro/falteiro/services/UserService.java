@@ -2,11 +2,11 @@ package com.projectfalteiro.falteiro.services;
 
 import com.projectfalteiro.falteiro.entities.User;
 import com.projectfalteiro.falteiro.repositories.UserRepository;
-import jakarta.persistence.Entity;
+import com.projectfalteiro.falteiro.services.exception.EmailAlreadyRegisteredException;
+import com.projectfalteiro.falteiro.services.exception.IdNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,7 +27,11 @@ public class UserService {
     }
 
     public User insert(User obj) {
-        return repository.save(obj);
+        if(repository.existsById(obj.getEmail())){
+            throw new EmailAlreadyRegisteredException(obj.getEmail());
+        }else {
+            return repository.save(obj);
+        }
     }
 
     public void delete(String id){
@@ -35,7 +39,7 @@ public class UserService {
             if(repository.existsById(id)){
                 repository.deleteById(id);
             }else{
-                throw new RuntimeException("ID not found");
+                throw new IdNotFoundException(id);
             }
         }catch(DataIntegrityViolationException e){
             throw new RuntimeException(e.getMessage());
@@ -48,7 +52,7 @@ public class UserService {
             updateData(entity, obj);
             return repository.save(entity);
         }catch (EntityNotFoundException e){
-            throw new RuntimeException(id);
+            throw new IdNotFoundException(id);
         }
     }
 
