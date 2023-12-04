@@ -1,12 +1,10 @@
 package com.projectfalteiro.falteiro.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.mindrot.jbcrypt.BCrypt;
+import org.hibernate.annotations.GenericGenerator;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.UUID;
 
@@ -15,31 +13,32 @@ import java.util.UUID;
 public class User {
 
     @Id
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
     @Getter
     private String id;
-    @Getter @Setter
+    @Getter
+    @Setter
     private String name;
-    @Getter @Setter
+    @Getter
+    @Setter
     private String email;
+    @Getter
     private String password;
 
     public User(){
 
     }
-
     public User(String name, String email, String password) {
-        this.id = UUID.randomUUID().toString();
         this.name = name;
         this.email = email;
-        this.password = hashPassword(password);
+        this.password = password;
     }
 
-    public boolean checkPassword(String plainTextPassword) {
-        return BCrypt.checkpw(plainTextPassword, this.password);
-    }
-
-    private String hashPassword(String plainTextPassword) {
-        return BCrypt.hashpw(plainTextPassword, BCrypt.gensalt());
+    // Adicione um método para definir e criptografar a senha
+    public void setPassword(String password) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        this.password = passwordEncoder.encode(password);
     }
 
 }

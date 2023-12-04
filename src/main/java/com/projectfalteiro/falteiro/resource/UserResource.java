@@ -11,7 +11,8 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping(value="/users")
+@RequestMapping("/api/users")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class UserResource {
 
 
