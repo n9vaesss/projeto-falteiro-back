@@ -35,7 +35,6 @@ public class User {
         this.password = password;
     }
 
-    // Adicione um método para definir e criptografar a senha
     public void setPassword(String password) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         this.password = passwordEncoder.encode(password);
