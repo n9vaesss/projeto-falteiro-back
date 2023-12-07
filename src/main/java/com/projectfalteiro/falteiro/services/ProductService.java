@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,12 +27,8 @@ public class ProductService {
     }
 
     public Product insert(Product obj){
-        validateBarCode(obj.getBarCode());
-        try{
-            return repository.save(obj);
-        }catch (DataIntegrityViolationException e){
-            throw new BarCodeAlreadyRegisteredException(obj.getBarCode());
-        }
+        obj.setEntryDate(new Date());
+        return repository.save(obj);
     }
 
     public void delete(String id){
@@ -58,15 +55,7 @@ public class ProductService {
 
     private void updateDate(Product entity, Product obj){
         entity.setAmount(obj.getAmount());
-        entity.setName(obj.getName());
         entity.setLocality(obj.getLocality());
-        entity.setBarCode(obj.getBarCode());
-    }
-
-    private void validateBarCode(String barCode){
-        if(repository.existsByBarCode(barCode)){
-            throw new BarCodeAlreadyRegisteredException(barCode);
-        }
     }
 
 }

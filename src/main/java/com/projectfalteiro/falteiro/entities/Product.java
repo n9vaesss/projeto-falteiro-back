@@ -1,13 +1,13 @@
 package com.projectfalteiro.falteiro.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.ManyToAny;
 
+import java.time.Instant;
 import java.util.Date;
 
 @Entity
@@ -21,12 +21,6 @@ public class Product {
     private String id;
     @Getter
     @Setter
-    private String name;
-    @Getter
-    @Setter
-    private String barCode;
-    @Getter
-    @Setter
     private Integer amount;
     @Getter
     @Setter
@@ -34,16 +28,26 @@ public class Product {
     @Getter
     @Setter
     private Date entryDate;
+    @Getter
+    @Setter
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+    @Getter
+    @OneToOne
+    @JoinColumn(name = "catalog_id")
+    private Catalog catalog;
 
     public Product(){
 
     }
 
-    public Product(String name, String barCode, Integer amount, String locality) {
-        this.name = name;
-        this.barCode = barCode;
+    public Product(String name, String barCode, Integer amount, String locality, User user, Catalog catalog) {
         this.amount = amount;
         this.locality = locality;
         this.entryDate = new Date();
+        this.user = user;
+        this.catalog = catalog;
     }
 }
